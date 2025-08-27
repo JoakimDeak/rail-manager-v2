@@ -1,9 +1,10 @@
 'use client'
 
-import { redirect } from 'next/navigation'
-import ChevronRight from '~/icons/chevron-right.svg'
-import { useRef } from 'react'
 import type { World } from '@prisma/client'
+import { redirect } from 'next/navigation'
+import { useRef } from 'react'
+
+import ChevronRight from '~/icons/chevron-right.svg'
 import { api } from '~/trpc/react'
 
 export const WorldDropdown = ({ selectedWorld }: { selectedWorld: World }) => {

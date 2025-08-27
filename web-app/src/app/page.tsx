@@ -1,9 +1,11 @@
-import { redirect } from 'next/navigation'
-import { auth } from '~/server/auth'
-import { WorldList } from './_components/WorldList'
-import { SignOutButton } from './_components/SignOutButton'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+
+import { auth } from '~/server/auth'
 import { api, HydrateClient } from '~/trpc/server'
+
+import { SignOutButton } from './_components/SignOutButton'
+import { WorldList } from './_components/WorldList'
 
 export default async function Home() {
   const session = await auth()

@@ -1,12 +1,13 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
+
 import { auth } from '~/server/auth'
 import { api, HydrateClient } from '~/trpc/server'
 
-import { NodeList } from '../_components/NodeList'
-import { WorldDropdown } from '../_components/WorldDropdown'
-import { SignOutButton } from '../_components/SignOutButton'
-import Link from 'next/link'
 import { EdgeList } from '../_components/EdgeList'
+import { NodeList } from '../_components/NodeList'
+import { SignOutButton } from '../_components/SignOutButton'
+import { WorldDropdown } from '../_components/WorldDropdown'
 
 export default async function Home({
   params,

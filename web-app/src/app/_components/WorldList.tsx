@@ -1,11 +1,12 @@
 'use client'
 
-import AddIcon from '~/icons/add.svg'
-
 import { useRef, useState } from 'react'
+
+import AddIcon from '~/icons/add.svg'
 import CheckIcon from '~/icons/check.svg'
 import LoadingSpinner from '~/icons/loading.svg'
 import { api } from '~/trpc/react'
+
 import { World } from './World'
 
 export const WorldList = () => {

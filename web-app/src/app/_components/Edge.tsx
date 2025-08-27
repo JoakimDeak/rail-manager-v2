@@ -1,12 +1,13 @@
 'use client'
 
 import type { Edge as EdgeType } from '@prisma/client'
-import { api } from '~/trpc/react'
-import DeleteIcon from '~/icons/close.svg'
-import LoadingSpinner from '~/icons/loading.svg'
-import EditIcon from '~/icons/edit.svg'
-import CheckIcon from '~/icons/check.svg'
 import { useRef, useState } from 'react'
+
+import CheckIcon from '~/icons/check.svg'
+import DeleteIcon from '~/icons/close.svg'
+import EditIcon from '~/icons/edit.svg'
+import LoadingSpinner from '~/icons/loading.svg'
+import { api } from '~/trpc/react'
 
 interface Props {
   edge: EdgeType & { node1: { name: string }; node2: { name: string } }

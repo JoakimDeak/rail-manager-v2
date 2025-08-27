@@ -1,10 +1,11 @@
 import type { Node as NodeType } from '@prisma/client'
-import { api } from '~/trpc/react'
-import DeleteIcon from '~/icons/close.svg'
-import LoadingSpinner from '~/icons/loading.svg'
-import EditIcon from '~/icons/edit.svg'
-import CheckIcon from '~/icons/check.svg'
 import { useRef, useState } from 'react'
+
+import CheckIcon from '~/icons/check.svg'
+import DeleteIcon from '~/icons/close.svg'
+import EditIcon from '~/icons/edit.svg'
+import LoadingSpinner from '~/icons/loading.svg'
+import { api } from '~/trpc/react'
 
 export const Node = ({ node }: { node: NodeType }) => {
   const [name, setName] = useState('')

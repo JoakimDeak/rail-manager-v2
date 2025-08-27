@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+
 import { auth } from '~/server/auth'
 
 export const SignOutButton = async () => {

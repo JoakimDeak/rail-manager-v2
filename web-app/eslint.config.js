@@ -1,5 +1,6 @@
 import { FlatCompat } from '@eslint/eslintrc'
 import tseslint from 'typescript-eslint'
+import importSort from 'eslint-plugin-simple-import-sort'
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
@@ -37,6 +38,11 @@ export default tseslint.config(
         'warn',
         { blankLine: 'always', next: 'return', prev: '*' },
       ],
+      'simple-import-sort/exports': 'warn',
+      'simple-import-sort/imports': 'warn',
+    },
+    plugins: {
+      'simple-import-sort': importSort,
     },
   },
   {

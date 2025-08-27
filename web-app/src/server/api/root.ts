@@ -1,7 +1,8 @@
 import { worldRouter } from '~/server/api/routers/world'
 import { createCallerFactory, createTRPCRouter } from '~/server/api/trpc'
-import { nodeRouter } from './routers/node'
+
 import { edgeRouter } from './routers/edge'
+import { nodeRouter } from './routers/node'
 
 /**
  * This is the primary router for your server.
