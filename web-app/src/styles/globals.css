@@ -1,6 +1,83 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --shadow-sharp: var(--spacing) var(--spacing) 0 black;
+  --shadow-sharp-sm: calc(var(--spacing) / 2) calc(var(--spacing) / 2) 0 black;
+}
+
+.dotted-bg {
+  --dot-space: 15px;
+  --dot-size: 1px;
+  --dot-color: oklch(69.6% 0.17 162.48);
+  background-color: white;
+  background-image: radial-gradient(
+    circle,
+    var(--dot-color) var(--dot-size),
+    transparent var(--dot-size)
+  );
+  background-size: var(--dot-space) var(--dot-space);
+}
+
+@layer components {
+  .button {
+    background-color: white;
+    padding: --spacing(2) --spacing(4);
+    outline: 1px solid black;
+    transition-property: box-shadow, translate;
+    @apply transition;
+    cursor: pointer;
+  }
+  .button:hover:not([disabled]) {
+    box-shadow: var(--shadow-sharp);
+  }
+  .button:active:not([disabled]) {
+    @apply translate-0.5;
+    @apply shadow-none;
+  }
+
+  .button-sm {
+    background-color: white;
+    padding: --spacing(1) --spacing(2);
+    outline: 1px solid black;
+    transition-property: box-shadow, translate;
+    @apply transition;
+    cursor: pointer;
+  }
+  .button-sm:hover:not([disabled]) {
+    box-shadow: var(--shadow-sharp-sm);
+  }
+  .button-sm:active:not([disabled]) {
+    @apply translate-px;
+    @apply shadow-none;
+  }
+}
+
+:root {
+  --colour1: --theme(--color-neutral-950/0.4);
+  --speed: 8s;
+  --stripeWidth: 20px;
+}
+
+@keyframes slide {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: var(--stripeWidth);
+  }
+}
+
+.bar {
+  width: 100%;
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent calc(var(--stripeWidth) / 2),
+    var(--colour1) calc(var(--stripeWidth) / 2),
+    var(--colour1) var(--stripeWidth)
+  );
+
+  animation: slide var(--speed) linear infinite;
+  will-change: background-position;
 }
