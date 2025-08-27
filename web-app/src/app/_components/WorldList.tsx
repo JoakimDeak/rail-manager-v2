@@ -9,7 +9,7 @@ import { api } from '~/trpc/react'
 import { World } from './World'
 
 export const WorldList = () => {
-  const { data: worlds } = api.world.getAll.useQuery()
+  const [worlds] = api.world.getAll.useSuspenseQuery()
   const [name, setName] = useState('')
 
   const toggleRef = useRef<HTMLInputElement>(null)
@@ -27,18 +27,23 @@ export const WorldList = () => {
   })
 
   return (
-    <div className="group shadow-sharp flex h-fit flex-col items-center gap-2 bg-white px-3 py-4 outline outline-black">
+    <div
+      className="group shadow-sharp flex h-fit flex-col items-center gap-2
+        bg-white px-3 py-4 outline outline-black"
+    >
       <div className="flex w-full flex-row items-center justify-between gap-4">
         <span className="pl-1">Worlds</span>
         <label>
           <input type="checkbox" className="peer hidden" ref={toggleRef} />
           <div className="button-sm p-1 outline-transparent hover:outline-black">
-            <AddIcon className="transition-transform group-has-checked:rotate-45" />
+            <AddIcon
+              className="transition-transform group-has-checked:rotate-45"
+            />
           </div>
         </label>
       </div>
       <div className="h-px w-full bg-black" />
-      {worlds?.map((world) => (
+      {worlds.map((world) => (
         <World world={world} key={world.id} />
       ))}
       <form
@@ -49,7 +54,8 @@ export const WorldList = () => {
           }
           createWorld.mutate({ name })
         }}
-        className="hidden items-center gap-2 outline-black group-has-checked:flex"
+        className="hidden items-center gap-2 outline-black w-full
+          group-has-checked:flex"
       >
         <input
           type="text"
@@ -58,7 +64,8 @@ export const WorldList = () => {
           required
           pattern=".+"
           placeholder="World Name"
-          className="shadow-sharp-sm px-2 py-1 outline outline-black placeholder:text-neutral-400"
+          className="shadow-sharp-sm px-2 py-1 outline outline-black w-full
+            placeholder:text-neutral-400"
         />
         <button disabled={createWorld.isPending} className="button-sm p-1">
           {createWorld.isPending ? <LoadingSpinner /> : <CheckIcon />}

@@ -3,6 +3,7 @@ import { auth } from '~/server/auth'
 import { WorldList } from './_components/WorldList'
 import { SignOutButton } from './_components/SignOutButton'
 import Link from 'next/link'
+import { api, HydrateClient } from '~/trpc/server'
 
 export default async function Home() {
   const session = await auth()
@@ -11,9 +12,13 @@ export default async function Home() {
     redirect('api/auth/signin')
   }
 
+  void api.world.getAll.prefetch()
+
   return (
-    <>
-      <nav className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2">
+    <HydrateClient>
+      <nav
+        className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2"
+      >
         <Link href="/" className="button font-black">
           Rail Manager v2
         </Link>
@@ -22,6 +27,6 @@ export default async function Home() {
       <main className="flex w-full justify-center pb-[20vh]">
         <WorldList />
       </main>
-    </>
+    </HydrateClient>
   )
 }

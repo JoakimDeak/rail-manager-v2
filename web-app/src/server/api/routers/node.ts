@@ -20,7 +20,7 @@ export const nodeRouter = createTRPCRouter({
         where: {
           world: { id: input.worldId },
         },
-        orderBy: { name: 'asc' },
+        orderBy: { createdAt: 'asc' },
       })
 
       return nodes ?? null

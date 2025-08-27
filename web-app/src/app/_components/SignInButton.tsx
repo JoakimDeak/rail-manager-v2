@@ -5,7 +5,6 @@ import cn from '~/utils/cn'
 export const SignInButton = async () => {
   const session = await auth()
   if (session) {
-    console.log('dont render sign in')
     return null
   }
 

@@ -13,12 +13,13 @@ export const Node = ({ node }: { node: NodeType }) => {
   const utils = api.useUtils()
   const deleteNode = api.node.delete.useMutation({
     onSuccess: async () => {
-      await utils.node.invalidate()
+      await Promise.all([utils.node.invalidate(), utils.edge.invalidate()])
     },
   })
   const updateNode = api.node.update.useMutation({
     onSuccess: async () => {
-      await utils.node.invalidate()
+      await Promise.all([utils.edge.invalidate(), utils.node.invalidate()])
+
       if (editToggleRef.current) {
         editToggleRef.current.checked = !editToggleRef.current.checked
       }
@@ -28,7 +29,10 @@ export const Node = ({ node }: { node: NodeType }) => {
   return (
     <div className="group flex w-full flex-row justify-between gap-2">
       <div className="relative flex gap-2">
-        <span className="group-has-checked:shadow-sharp min-w-[186px] grow truncate px-2 py-1 whitespace-nowrap outline outline-black">
+        <span
+          className="group-has-checked:shadow-sharp min-w-[186px] grow truncate
+            px-2 py-1 whitespace-nowrap outline outline-black"
+        >
           {node.name}
         </span>
         <form
@@ -36,7 +40,9 @@ export const Node = ({ node }: { node: NodeType }) => {
             e.preventDefault()
             updateNode.mutate({ name, nodeId: node.id })
           }}
-          className="shadow-sharp absolute bottom-0 z-10 hidden size-4 h-auto w-full translate-y-full gap-2 bg-white px-2 py-1 pr-1 outline outline-black group-has-checked:flex"
+          className="shadow-sharp absolute bottom-0 z-10 hidden size-4 h-auto
+            w-full translate-y-full gap-2 bg-white px-2 py-1 pr-1 outline
+            outline-black group-has-checked:flex"
         >
           <input
             type="text"

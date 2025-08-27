@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { auth } from '~/server/auth'
-import { api } from '~/trpc/server'
+import { api, HydrateClient } from '~/trpc/server'
 
 import { NodeList } from '../_components/NodeList'
 import { WorldDropdown } from '../_components/WorldDropdown'
@@ -17,16 +17,24 @@ export default async function Home({
   if (!session) {
     redirect('api/auth/signin')
   }
-  const worldId = (await params).world
-  const world = await api.world.get({ id: Number(worldId) })
+
+  const awaitedParams = await params
+  const worldId = Number(awaitedParams.world)
+  const world = await api.world.get({ id: worldId })
 
   if (!world) {
     redirect('/')
   }
 
+  void api.world.getAll.prefetch()
+  void api.node.getAll.prefetch({ worldId })
+  void api.edge.getAll.prefetch({ worldId })
+
   return (
-    <>
-      <nav className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2">
+    <HydrateClient>
+      <nav
+        className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2"
+      >
         <Link href="/" className="button self-start font-black underline">
           Rail Manager v2
         </Link>
@@ -41,6 +49,6 @@ export default async function Home({
           <EdgeList worldId={world.id} />
         </div>
       </main>
-    </>
+    </HydrateClient>
   )
 }

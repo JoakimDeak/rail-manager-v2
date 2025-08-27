@@ -8,7 +8,7 @@ export const edgeRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const edges = await ctx.db.edge.findMany({
         where: { world: { id: input.worldId } },
-        orderBy: { node1Id: 'asc' },
+        orderBy: { createdAt: 'asc' },
         include: {
           node1: { select: { name: true } },
           node2: { select: { name: true } },
@@ -17,7 +17,6 @@ export const edgeRouter = createTRPCRouter({
 
       return edges ?? null
     }),
-
   create: protectedProcedure
     .input(
       z.object({
@@ -37,7 +36,6 @@ export const edgeRouter = createTRPCRouter({
         },
       })
     }),
-
   delete: protectedProcedure
     .input(z.object({ edgeId: z.number() }))
     .mutation(async ({ ctx, input }) => {
@@ -45,31 +43,18 @@ export const edgeRouter = createTRPCRouter({
         where: { id: input.edgeId },
       })
     }),
-  // create: protectedProcedure
-  //   .input(z.object({ name: z.string().min(1), worldId: z.number() }))
-  //   .mutation(async ({ ctx, input }) => {
-  //     return ctx.db.node.create({
-  //       data: {
-  //         name: input.name,
-  //         createdBy: { connect: { id: ctx.session.user.id } },
-  //         world: { connect: { id: input.worldId } },
-  //       },
-  //     })
-  //   }),
-
-  // getAll: protectedProcedure
-  //   .input(z.object({ worldId: z.number() }))
-  //   .query(async ({ ctx, input }) => {
-  //     const nodes = await ctx.db.node.findMany({
-  //       where: {
-  //         AND: [
-  //           { createdBy: { id: ctx.session.user.id } },
-  //           { world: { id: input.worldId } },
-  //         ],
-  //       },
-  //       orderBy: { name: 'asc' },
-  //     })
-
-  //     return nodes ?? null
-  //   }),
+  update: protectedProcedure
+    .input(z.object({ edgeId: z.number(), weight: z.number().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.edge.update({
+        where: { id: input.edgeId },
+        data: {
+          weight: input.weight,
+          id: undefined,
+          worldId: undefined,
+          node1Id: undefined,
+          node2Id: undefined,
+        },
+      })
+    }),
 })

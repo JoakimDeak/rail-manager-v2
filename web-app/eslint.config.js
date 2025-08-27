@@ -33,6 +33,10 @@ export default tseslint.config(
         'error',
         { checksVoidReturn: { attributes: false } },
       ],
+      'padding-line-between-statements': [
+        'warn',
+        { blankLine: 'always', next: 'return', prev: '*' },
+      ],
     },
   },
   {

@@ -16,7 +16,7 @@ datasource db {
 
 model World {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -26,12 +26,13 @@ model World {
   createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
 
+  @@unique([createdById, name])
   @@index(fields: [id, createdById])
 }
 
 model Node {
   id   Int    @id @default(autoincrement())
-  name String @unique
+  name String
 
   world   World @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId Int
@@ -39,6 +40,9 @@ model Node {
   edges1 Edge[] @relation("edges1")
   edges2 Edge[] @relation("edges2")
 
+  createdAt DateTime @default(now())
+
+  @@unique([worldId, name])
   @@index(fields: [worldId])
 }
 
@@ -54,6 +58,8 @@ model Edge {
 
   node2   Node @relation("edges2", fields: [node2Id], references: [id], onDelete: Cascade)
   node2Id Int
+
+  createdAt DateTime @default(now())
 
   @@unique([node1Id, node2Id])
   @@index(fields: [worldId])

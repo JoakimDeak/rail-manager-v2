@@ -9,6 +9,7 @@ export const CreateNodeButton = ({ worldId }: { worldId: number }) => {
       await utils.node.invalidate()
     },
   })
+
   return (
     <button
       onClick={() => {

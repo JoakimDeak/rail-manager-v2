@@ -9,6 +9,7 @@ export const CreateEdgeButton = ({ worldId }: { worldId: number }) => {
       await utils.edge.invalidate()
     },
   })
+
   return (
     <button
       onClick={() => {

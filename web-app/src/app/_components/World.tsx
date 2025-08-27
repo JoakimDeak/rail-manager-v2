@@ -12,6 +12,7 @@ export const World = ({ world }: { world: WorldType }) => {
       await utils.world.invalidate()
     },
   })
+
   return (
     <div className="relative flex w-full flex-row justify-between gap-2">
       <Link
