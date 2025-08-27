@@ -16,7 +16,7 @@ export const World = ({ world }: { world: WorldType }) => {
     <div className="relative flex w-full flex-row justify-between gap-2">
       <Link
         href={`/${world.id}`}
-        className="button-sm min-w-36 grow truncate whitespace-nowrap"
+        className="button-sm min-w-[186px] grow truncate whitespace-nowrap"
       >
         {world.name}
       </Link>

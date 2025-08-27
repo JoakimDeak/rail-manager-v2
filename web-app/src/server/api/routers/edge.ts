@@ -9,6 +9,10 @@ export const edgeRouter = createTRPCRouter({
       const edges = await ctx.db.edge.findMany({
         where: { world: { id: input.worldId } },
         orderBy: { node1Id: 'asc' },
+        include: {
+          node1: { select: { name: true } },
+          node2: { select: { name: true } },
+        },
       })
 
       return edges ?? null

@@ -25,6 +25,8 @@ model World {
 
   createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
+
+  @@index(fields: [id, createdById])
 }
 
 model Node {
@@ -36,6 +38,8 @@ model Node {
 
   edges1 Edge[] @relation("edges1")
   edges2 Edge[] @relation("edges2")
+
+  @@index(fields: [worldId])
 }
 
 model Edge {
@@ -52,6 +56,7 @@ model Edge {
   node2Id Int
 
   @@unique([node1Id, node2Id])
+  @@index(fields: [worldId])
 }
 
 // Necessary for Next auth

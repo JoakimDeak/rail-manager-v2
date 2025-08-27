@@ -8,7 +8,6 @@ import LoadingSpinner from '~/icons/loading.svg'
 import { api } from '~/trpc/react'
 import { World } from './World'
 
-// Move to center for / and move to nav as dropdown for /[world]
 export const WorldList = () => {
   const { data: worlds } = api.world.getAll.useQuery()
   const [name, setName] = useState('')
@@ -28,7 +27,7 @@ export const WorldList = () => {
   })
 
   return (
-    <div className="group shadow-sharp flex w-[264px] flex-col items-center gap-2 bg-white px-3 py-4 outline outline-black">
+    <div className="group shadow-sharp flex h-fit flex-col items-center gap-2 bg-white px-3 py-4 outline outline-black">
       <div className="flex w-full flex-row items-center justify-between gap-4">
         <span className="pl-1">Worlds</span>
         <label>
@@ -59,7 +58,7 @@ export const WorldList = () => {
           required
           pattern=".+"
           placeholder="World Name"
-          className="shadow-sharp-sm w-[200px] px-2 py-1 outline outline-black placeholder:text-neutral-400"
+          className="shadow-sharp-sm px-2 py-1 outline outline-black placeholder:text-neutral-400"
         />
         <button disabled={createWorld.isPending} className="button-sm p-1">
           {createWorld.isPending ? <LoadingSpinner /> : <CheckIcon />}

@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation'
 import { auth } from '~/server/auth'
-import { api, HydrateClient } from '~/trpc/server'
-import { SideBar } from '../_components/SideBar'
-import { CreateNodeButton } from '../_components/CreateNodeButton'
+import { api } from '~/trpc/server'
+
 import { NodeList } from '../_components/NodeList'
-import { CreateEdgeButton } from '../_components/CreateEdgeButton'
+import { WorldDropdown } from '../_components/WorldDropdown'
+import { SignOutButton } from '../_components/SignOutButton'
+import Link from 'next/link'
 import { EdgeList } from '../_components/EdgeList'
 
 export default async function Home({
@@ -23,19 +24,23 @@ export default async function Home({
     redirect('/')
   }
 
-  void api.node.getAll.prefetch({ worldId: world.id })
-
   return (
-    <HydrateClient>
-      <main className="grid min-h-screen grid-cols-[1fr_min-content] justify-between">
-        <div>
-          <CreateNodeButton worldId={world.id} />
+    <>
+      <nav className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2">
+        <Link href="/" className="button self-start font-black underline">
+          Rail Manager v2
+        </Link>
+        <div className="flex flex-row gap-4">
+          <WorldDropdown selectedWorld={world} />
+          <SignOutButton />
+        </div>
+      </nav>
+      <main className="flex w-full justify-center gap-8">
+        <div className="flex flex-row gap-8">
           <NodeList worldId={world.id} />
-          <CreateEdgeButton worldId={world.id} />
           <EdgeList worldId={world.id} />
         </div>
-        <SideBar />
       </main>
-    </HydrateClient>
+    </>
   )
 }

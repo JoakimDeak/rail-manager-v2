@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import { auth } from '~/server/auth'
-import { api, HydrateClient } from '~/trpc/server'
-import { SideBar } from './_components/SideBar'
+import { WorldList } from './_components/WorldList'
+import { SignOutButton } from './_components/SignOutButton'
+import Link from 'next/link'
 
 export default async function Home() {
   const session = await auth()
@@ -10,14 +11,17 @@ export default async function Home() {
     redirect('api/auth/signin')
   }
 
-  void api.world.getAll.prefetch()
-
   return (
-    <HydrateClient>
-      <main className="grid min-h-screen grid-cols-[1fr_min-content] justify-between">
-        <div className=""></div>
-        <SideBar />
+    <>
+      <nav className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2">
+        <Link href="/" className="button font-black">
+          Rail Manager v2
+        </Link>
+        <SignOutButton />
+      </nav>
+      <main className="flex w-full justify-center pb-[20vh]">
+        <WorldList />
       </main>
-    </HydrateClient>
+    </>
   )
 }

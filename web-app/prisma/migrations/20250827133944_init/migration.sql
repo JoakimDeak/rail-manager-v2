@@ -20,10 +20,12 @@ CREATE TABLE "Node" (
 CREATE TABLE "Edge" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "weight" INTEGER NOT NULL,
+    "worldId" INTEGER NOT NULL,
     "node1Id" INTEGER NOT NULL,
     "node2Id" INTEGER NOT NULL,
+    CONSTRAINT "Edge_worldId_fkey" FOREIGN KEY ("worldId") REFERENCES "World" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Edge_node1Id_fkey" FOREIGN KEY ("node1Id") REFERENCES "Node" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "Edge_node2Id_fkey" FOREIGN KEY ("node2Id") REFERENCES "Node" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Edge_node2Id_fkey" FOREIGN KEY ("node2Id") REFERENCES "Node" ("id") ON DELETE CASCADE ON UPDATE CASCADE
     CHECK ("node1Id" < "node2Id")
 );
 
@@ -74,7 +76,16 @@ CREATE TABLE "VerificationToken" (
 CREATE UNIQUE INDEX "World_name_key" ON "World"("name");
 
 -- CreateIndex
+CREATE INDEX "World_id_createdById_idx" ON "World"("id", "createdById");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Node_name_key" ON "Node"("name");
+
+-- CreateIndex
+CREATE INDEX "Node_worldId_idx" ON "Node"("worldId");
+
+-- CreateIndex
+CREATE INDEX "Edge_worldId_idx" ON "Edge"("worldId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Edge_node1Id_node2Id_key" ON "Edge"("node1Id", "node2Id");

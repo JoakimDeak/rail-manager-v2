@@ -40,13 +40,4 @@ export const worldRouter = createTRPCRouter({
 
       return world ?? null
     }),
-  getByName: protectedProcedure
-    .input(z.object({ name: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const world = await ctx.db.world.findFirst({
-        where: { name: input.name },
-      })
-
-      return world ?? null
-    }),
 })

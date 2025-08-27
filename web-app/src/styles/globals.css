@@ -18,13 +18,21 @@
   background-size: var(--dot-space) var(--dot-space);
 }
 
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
 @layer components {
   .button {
     background-color: white;
     padding: --spacing(2) --spacing(4);
     outline: 1px solid black;
-    transition-property: box-shadow, translate;
     @apply transition;
+    transition-property: box-shadow, translate;
     cursor: pointer;
   }
   .button:hover:not([disabled]) {
@@ -39,8 +47,8 @@
     background-color: white;
     padding: --spacing(1) --spacing(2);
     outline: 1px solid black;
-    transition-property: box-shadow, translate;
     @apply transition;
+    transition-property: box-shadow, translate;
     cursor: pointer;
   }
   .button-sm:hover:not([disabled]) {

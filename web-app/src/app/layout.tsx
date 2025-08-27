@@ -21,7 +21,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${fira.className}`}>
-      <body className="dotted-bg">
+      <body className="dotted-bg min-h-screen">
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>

@@ -3,6 +3,10 @@
  * for Docker builds.
  */
 import './src/env.js'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -16,15 +20,14 @@ const config = {
       },
     ],
   },
-  experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
+    root: join(__dirname, '/'),
   },
 }
 
