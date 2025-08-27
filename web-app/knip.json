@@ -1,0 +1,15 @@
+{
+  "ignore": [
+    "src/utils/cn.ts",
+    "src/trpc/*",
+    "src/server/api/trpc.ts",
+    "src/server/auth/index.ts"
+  ],
+  "ignoreDependencies": [
+    "@svgr/webpack",
+    "clsx",
+    "tailwind-merge",
+    "tailwindcss",
+    "eslint-config-next"
+  ]
+}
