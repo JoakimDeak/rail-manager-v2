@@ -7,8 +7,7 @@ export const edgeRouter = createTRPCRouter({
     .input(z.object({ worldId: z.number() }))
     .query(async ({ ctx, input }) => {
       const edges = await ctx.db.edge.findMany({
-        // where: { world: { id: input.worldId } },
-        where: {},
+        where: { world: { id: input.worldId } },
         orderBy: { node1Id: 'asc' },
       })
 
