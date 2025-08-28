@@ -44,7 +44,7 @@ export const EdgeList = ({ worldId }: Props) => {
   return (
     <div
       className="shadow-sharp flex h-fit flex-col items-center gap-2 bg-white
-        min-w-[237px] px-3 py-4 outline outline-black"
+        max-w-[600px] min-w-[237px] px-3 py-4 outline outline-black"
     >
       <div
         className="peer flex w-full flex-row items-center justify-between gap-4"
@@ -76,7 +76,7 @@ export const EdgeList = ({ worldId }: Props) => {
         <div className="group relative">
           <select
             className="button-sm appearance-none pr-8 open:translate-0.5
-              open:shadow-none"
+              truncate min-w-0 max-w-52 open:shadow-none"
             {...register('node1Id', { valueAsNumber: true })}
           >
             {nodes?.map((world) => (
@@ -89,14 +89,14 @@ export const EdgeList = ({ worldId }: Props) => {
             className="pointer-events-none absolute top-1/2 right-1
               -translate-y-1/2 rotate-90 transition-transform
               group-has-open:translate-x-[2px]
-              group-has-open:translate-y-[calc(-50%_+_2px)]
+              group-has-open:translate-y-[calc(-50%+2px)]
               group-has-open:-scale-x-100"
           />
         </div>
         <div className="group relative">
           <select
-            className="button-sm appearance-none pr-8 open:translate-0.5
-              open:shadow-none"
+            className="button-sm appearance-none pr-8 open:translate-0.5 min-w-0
+              max-w-52 truncate open:shadow-none"
             {...register('node2Id', { valueAsNumber: true })}
           >
             {nodes?.map((world) => (
@@ -109,7 +109,7 @@ export const EdgeList = ({ worldId }: Props) => {
             className="pointer-events-none absolute top-1/2 right-1
               -translate-y-1/2 rotate-90 transition-transform
               group-has-open:translate-x-[2px]
-              group-has-open:translate-y-[calc(-50%_+_2px)]
+              group-has-open:translate-y-[calc(-50%+2px)]
               group-has-open:-scale-x-100"
           />
         </div>

@@ -16,6 +16,7 @@ export default async function Home() {
 
   void api.world.getAll.prefetch()
 
+  // TODO: Fix layout for <600px
   return (
     <HydrateClient>
       <nav

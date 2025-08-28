@@ -31,7 +31,7 @@ export const NodeList = ({ worldId }: { worldId: number }) => {
   return (
     <div
       className="shadow-sharp flex h-fit flex-col items-center gap-2 bg-white
-        min-w-[278.5px] px-3 py-4 outline outline-black"
+        max-w-[400px] min-w-[278.5px] px-3 py-4 outline outline-black"
     >
       <div
         className="peer flex w-full flex-row items-center justify-between gap-4"

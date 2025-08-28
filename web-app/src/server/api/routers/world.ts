@@ -13,7 +13,6 @@ export const worldRouter = createTRPCRouter({
         },
       })
     }),
-
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
@@ -21,7 +20,6 @@ export const worldRouter = createTRPCRouter({
         where: { id: input.id },
       })
     }),
-
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const worlds = await ctx.db.world.findMany({
       where: { createdBy: { id: ctx.session.user.id } },
@@ -30,7 +28,6 @@ export const worldRouter = createTRPCRouter({
 
     return worlds ?? null
   }),
-
   get: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -39,5 +36,15 @@ export const worldRouter = createTRPCRouter({
       })
 
       return world ?? null
+    }),
+  update: protectedProcedure
+    .input(z.object({ id: z.number(), name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.world.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+        },
+      })
     }),
 })

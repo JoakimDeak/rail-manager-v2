@@ -29,13 +29,15 @@ export const WorldList = () => {
 
   return (
     <div
-      className="group shadow-sharp flex h-fit flex-col items-center gap-2
-        bg-white px-3 py-4 outline outline-black"
+      className="shadow-sharp flex h-fit flex-col items-center gap-2 bg-white
+        max-w-[400px] px-3 py-4 outline outline-black"
     >
-      <div className="flex w-full flex-row items-center justify-between gap-4">
+      <div
+        className="peer flex w-full flex-row items-center justify-between gap-4"
+      >
         <span className="pl-1">Worlds</span>
         <label>
-          <input type="checkbox" className="peer hidden" ref={toggleRef} />
+          <input type="checkbox" className="hidden group" ref={toggleRef} />
           <div className="button-sm p-1 outline-transparent hover:outline-black">
             <AddIcon
               className="transition-transform group-has-checked:rotate-45"
@@ -56,7 +58,7 @@ export const WorldList = () => {
           createWorld.mutate({ name })
         }}
         className="hidden items-center gap-2 outline-black w-full
-          group-has-checked:flex"
+          peer-has-checked:flex"
       >
         <input
           type="text"

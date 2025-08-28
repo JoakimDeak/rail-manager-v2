@@ -29,7 +29,7 @@ export const Node = ({ node }: { node: NodeType }) => {
 
   return (
     <div className="group flex w-full flex-row justify-between gap-2">
-      <div className="relative flex gap-2">
+      <div className="relative flex gap-2 min-w-0">
         <span
           className="group-has-checked:shadow-sharp min-w-[186px] grow truncate
             px-2 py-1 whitespace-nowrap outline outline-black"

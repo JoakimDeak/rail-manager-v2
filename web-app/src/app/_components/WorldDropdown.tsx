@@ -12,14 +12,14 @@ export const WorldDropdown = ({ selectedWorld }: { selectedWorld: World }) => {
   const [worlds] = api.world.getAll.useSuspenseQuery()
 
   return (
-    <div className="group relative">
+    <div className="group relative min-w-0 max-w-full">
       <select
         ref={selectRef}
         onChange={(e) => {
           redirect(`/${e.target.value}`)
         }}
-        className="button appearance-none pr-10 open:translate-0.5
-          open:shadow-none"
+        className="button appearance-none pr-10 open:translate-0.5 truncate
+          min-w-0 block max-w-full open:shadow-none"
         defaultValue={selectedWorld?.id}
       >
         {worlds?.map((world) => (
@@ -30,7 +30,9 @@ export const WorldDropdown = ({ selectedWorld }: { selectedWorld: World }) => {
       </select>
       <ChevronRight
         className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2
-          rotate-90 transition-transform group-has-open:-scale-x-100"
+          rotate-90 transition-transform group-has-open:-scale-x-100
+          group-has-open:translate-x-[2px]
+          group-has-open:translate-y-[calc(-50%+2px)]"
       />
     </div>
   )

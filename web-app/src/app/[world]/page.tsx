@@ -34,9 +34,13 @@ export default async function Home({
   return (
     <HydrateClient>
       <nav
-        className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2"
+        className="sticky inset-x-0 top-0 mb-4 gap-4 flex w-full justify-between
+          p-2"
       >
-        <Link href="/" className="button self-start font-black underline">
+        <Link
+          href="/"
+          className="button self-start font-black underline whitespace-nowrap"
+        >
           Rail Manager v2
         </Link>
         <div className="flex flex-row gap-4">
@@ -44,8 +48,8 @@ export default async function Home({
           <SignOutButton />
         </div>
       </nav>
-      <main className="flex w-full justify-center gap-8">
-        <div className="flex flex-row gap-8">
+      <main className="flex w-full justify-center gap-8 px-8">
+        <div className="flex flex-row gap-8 flex-wrap justify-center">
           <NodeList worldId={world.id} />
           <EdgeList worldId={world.id} />
         </div>

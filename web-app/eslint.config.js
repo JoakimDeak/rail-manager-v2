@@ -1,12 +1,14 @@
 import { FlatCompat } from '@eslint/eslintrc'
 import tseslint from 'typescript-eslint'
 import importSort from 'eslint-plugin-simple-import-sort'
+import { globalIgnores } from 'eslint/config'
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 })
 
 export default tseslint.config(
+  [globalIgnores(['next-env.d.ts'])],
   {
     ignores: ['.next'],
   },

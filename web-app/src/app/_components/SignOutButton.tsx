@@ -13,9 +13,9 @@ export const SignOutButton = async () => {
   return (
     <Link
       href="api/auth/signout"
-      className="button flex w-fit flex-row gap-2 pr-2"
+      className="button flex w-fit flex-row gap-2 pr-2 shrink-0"
     >
-      <span>Sign out</span>
+      <span className="whitespace-nowrap">Sign out</span>
       {session?.user.image && (
         <>
           <div className="w-px bg-black" />
