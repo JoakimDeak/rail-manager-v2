@@ -8,8 +8,9 @@ import LoadingSpinner from '~/icons/loading.svg'
 import { api } from '~/trpc/react'
 
 export const Node = ({ node }: { node: NodeType }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState(node.name)
   const editToggleRef = useRef<HTMLInputElement>(null)
+  const nameEditRef = useRef<HTMLInputElement>(null)
 
   const utils = api.useUtils()
   const deleteNode = api.node.delete.useMutation({
@@ -46,6 +47,7 @@ export const Node = ({ node }: { node: NodeType }) => {
             outline-black group-has-checked:flex"
         >
           <input
+            ref={nameEditRef}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -60,7 +62,17 @@ export const Node = ({ node }: { node: NodeType }) => {
       <div className="relative flex flex-row items-center gap-1">
         <label className="button-sm p-1">
           <EditIcon />
-          <input className="hidden" type="checkbox" ref={editToggleRef} />
+          <input
+            className="hidden"
+            type="checkbox"
+            onChange={(e) => {
+              console.log('toggle')
+              if (e.target.checked) {
+                nameEditRef.current?.focus()
+              }
+            }}
+            ref={editToggleRef}
+          />
         </label>
         <button
           disabled={deleteNode.isPending}

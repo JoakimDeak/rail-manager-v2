@@ -9,8 +9,9 @@ import LoadingSpinner from '~/icons/loading.svg'
 import { api } from '~/trpc/react'
 
 export const World = ({ world }: { world: WorldType }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState(world.name)
   const editToggleRef = useRef<HTMLInputElement>(null)
+  const nameEditRef = useRef<HTMLInputElement>(null)
 
   const utils = api.useUtils()
   const deleteWorld = api.world.delete.useMutation({
@@ -49,6 +50,7 @@ export const World = ({ world }: { world: WorldType }) => {
             outline-black group-has-checked:flex"
         >
           <input
+            ref={nameEditRef}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -64,7 +66,16 @@ export const World = ({ world }: { world: WorldType }) => {
       <div className="flex peer flex-row items-center gap-1">
         <label className="button-sm p-1">
           <EditIcon />
-          <input className="hidden" type="checkbox" ref={editToggleRef} />
+          <input
+            className="hidden"
+            type="checkbox"
+            onChange={(e) => {
+              if (e.target.checked) {
+                nameEditRef.current?.focus()
+              }
+            }}
+            ref={editToggleRef}
+          />
         </label>
         <button
           disabled={deleteWorld.isPending}

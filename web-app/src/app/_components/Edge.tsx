@@ -16,6 +16,7 @@ interface Props {
 export const Edge = ({ edge }: Props) => {
   const [weight, setWeight] = useState(edge.weight)
   const editToggleRef = useRef<HTMLInputElement>(null)
+  const weightEditRef = useRef<HTMLInputElement>(null)
 
   const utils = api.useUtils()
   const deleteEdge = api.edge.delete.useMutation({
@@ -51,6 +52,7 @@ export const Edge = ({ edge }: Props) => {
             outline outline-black group-has-checked:flex"
         >
           <input
+            ref={weightEditRef}
             type="number"
             min={1}
             required
@@ -68,7 +70,16 @@ export const Edge = ({ edge }: Props) => {
       <div className="relative flex flex-row items-center gap-1">
         <label className="button-sm p-1">
           <EditIcon />
-          <input className="hidden" type="checkbox" ref={editToggleRef} />
+          <input
+            className="hidden"
+            type="checkbox"
+            onChange={(e) => {
+              if (e.target.checked) {
+                weightEditRef.current?.focus()
+              }
+            }}
+            ref={editToggleRef}
+          />
         </label>
         <button
           disabled={deleteEdge.isPending}
