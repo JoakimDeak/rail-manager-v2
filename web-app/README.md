@@ -1,6 +1,5 @@
 # TODO
 
-- Add CC link keys
 - Fix layout for <600px
 - Custom logout page
 - Custom login page
