@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+import KeyIcon from '~/icons/key.svg'
 import { auth } from '~/server/auth'
 import { api, HydrateClient } from '~/trpc/server'
 
@@ -45,6 +46,9 @@ export default async function Home({
         </Link>
         <div className="flex flex-row gap-4">
           <WorldDropdown selectedWorld={world} />
+          <Link className="button p-2" href="/linking">
+            <KeyIcon />
+          </Link>
           <SignOutButton />
         </div>
       </nav>

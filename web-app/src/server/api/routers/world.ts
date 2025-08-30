@@ -31,7 +31,7 @@ export const worldRouter = createTRPCRouter({
   get: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-      const world = await ctx.db.world.findFirst({
+      const world = await ctx.db.world.findUnique({
         where: { id: input.id },
       })
 

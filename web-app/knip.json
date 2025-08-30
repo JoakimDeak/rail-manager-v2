@@ -5,11 +5,5 @@
     "src/server/api/trpc.ts",
     "src/server/auth/index.ts"
   ],
-  "ignoreDependencies": [
-    "@svgr/webpack",
-    "clsx",
-    "tailwind-merge",
-    "tailwindcss",
-    "eslint-config-next"
-  ]
+  "ignoreDependencies": ["@svgr/webpack", "tailwindcss", "eslint-config-next"]
 }

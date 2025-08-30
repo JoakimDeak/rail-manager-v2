@@ -1,25 +1,16 @@
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import KeyIcon from '~/icons/key.svg'
-import { auth } from '~/server/auth'
 import { api, HydrateClient } from '~/trpc/server'
 
-import { SignOutButton } from './_components/SignOutButton'
-import { WorldList } from './_components/WorldList'
+import { AuthMenu } from '../_components/AuthMenu'
+import { SignOutButton } from '../_components/SignOutButton'
 
 export default async function Home() {
-  const session = await auth()
-
-  if (!session) {
-    redirect('api/auth/signin')
-  }
-
-  void api.world.getAll.prefetch()
+  void api.user.get.prefetch()
 
   return (
     <HydrateClient>
-      {/* TODO: Make nav a proper component */}
       <nav
         className="sticky inset-x-0 top-0 mb-4 flex w-full justify-between p-2"
       >
@@ -33,8 +24,8 @@ export default async function Home() {
           <SignOutButton />
         </div>
       </nav>
-      <main className="flex w-full justify-center pb-[20vh]">
-        <WorldList />
+      <main className="flex flex-col w-full pb-[20vh] px-8">
+        <AuthMenu />
       </main>
     </HydrateClient>
   )

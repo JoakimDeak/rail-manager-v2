@@ -3,6 +3,13 @@
 @theme {
   --shadow-sharp: var(--spacing) var(--spacing) 0 black;
   --shadow-sharp-sm: calc(var(--spacing) / 2) calc(var(--spacing) / 2) 0 black;
+
+  --animate-blink: blink 1s step-start -0.5s infinite;
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
 }
 
 .dotted-bg {
