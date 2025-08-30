@@ -30,7 +30,7 @@ export const WorldList = () => {
   return (
     <div
       className="shadow-sharp flex h-fit flex-col items-center gap-2 bg-white
-        max-w-[400px] px-3 py-4 outline outline-black"
+        max-w-[400px] px-3 py-4 outline outline-black min-w-[278.5px]"
     >
       <div
         className="peer flex w-full flex-row items-center justify-between gap-4"

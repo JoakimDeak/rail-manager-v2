@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 import AddIcon from '~/icons/add.svg'
 import CheckIcon from '~/icons/check.svg'
@@ -38,7 +39,15 @@ export const EdgeList = ({ worldId }: Props) => {
       }
       toggleRef.current.checked = !toggleRef.current.checked
     },
-    // TODO: Add toast
+    onError: (e) => {
+      if (e.data?.zodError) {
+        e.data?.zodError?.formErrors.forEach((err) => {
+          toast.error(err)
+        })
+      } else {
+        toast.error(e.message)
+      }
+    },
   })
 
   return (

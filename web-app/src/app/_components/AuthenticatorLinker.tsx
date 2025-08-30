@@ -1,6 +1,7 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import QRCode from 'react-qr-code'
 
 import CheckIcon from '~/icons/check.svg'
@@ -14,7 +15,11 @@ export const AuthenticatorLinker = () => {
   const link = api.auth.link.useMutation()
   const validate = api.auth.validate.useMutation({
     onSuccess: async () => {
+      toast.success('Authenticator was linked')
       await utils.user.invalidate()
+    },
+    onError: (e) => {
+      toast.error(e.message)
     },
   })
   const { register, handleSubmit, setFocus, watch, subscribe } = useForm<{
@@ -41,7 +46,6 @@ export const AuthenticatorLinker = () => {
           </div>
           <form
             onSubmit={handleSubmit(({ code }) => {
-              // TODO: Add toast
               validate.mutate({ code })
             })}
             className="w-full flex flex-row group gap-2 max-w-[272px]"

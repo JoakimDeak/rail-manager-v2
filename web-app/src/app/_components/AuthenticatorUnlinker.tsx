@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 import CloseIcon from '~/icons/close.svg'
 import Spinner from '~/icons/loading.svg'
@@ -8,11 +9,14 @@ import cn from '~/utils/cn'
 
 export const AuthenticatorUnlinker = () => {
   const utils = api.useUtils()
-  // TODO: Add toast
   const unlink = api.auth.unlink.useMutation({
     onSuccess: async () => {
       dialogRef.current?.close()
+      toast.success('Authenticator was unlinked')
       await utils.user.invalidate()
+    },
+    onError: (e) => {
+      toast.error(e.message)
     },
   })
 

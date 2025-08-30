@@ -31,6 +31,7 @@ export const authRouter = createTRPCRouter({
       if (!user?.totp_secret) {
         throw new TRPCError({
           code: 'NOT_FOUND',
+          message: 'Linking process has not been started',
         })
       }
       const totp = new OTPAuth.TOTP({
@@ -38,7 +39,7 @@ export const authRouter = createTRPCRouter({
       })
       const delta = totp.validate({ token: input.code, window: 1 })
       if (delta === null) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid code' })
       }
       await ctx.db.user.update({
         where: { id: ctx.session.user.id },
@@ -56,6 +57,7 @@ export const authRouter = createTRPCRouter({
       if (!user?.totp_secret) {
         throw new TRPCError({
           code: 'NOT_FOUND',
+          message: 'User has no linked authenticator to unlink',
         })
       }
       const totp = new OTPAuth.TOTP({
@@ -63,7 +65,7 @@ export const authRouter = createTRPCRouter({
       })
       const delta = totp.validate({ token: input.code, window: 1 })
       if (delta === null) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' })
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid code' })
       }
 
       await ctx.db.user.update({
