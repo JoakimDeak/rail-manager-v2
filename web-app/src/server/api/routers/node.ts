@@ -1,9 +1,13 @@
 import { z } from 'zod'
 
-import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  sessionProtectedProcedure,
+} from '~/server/api/trpc'
 
 export const nodeRouter = createTRPCRouter({
-  create: protectedProcedure
+  create: sessionProtectedProcedure
     .input(z.object({ name: z.string().min(1), worldId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.node.create({
@@ -25,19 +29,21 @@ export const nodeRouter = createTRPCRouter({
 
       return nodes ?? null
     }),
-  delete: protectedProcedure
+  // TODO: Add getConnectedNodes
+  delete: sessionProtectedProcedure
     .input(z.object({ nodeId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.node.delete({
         where: { id: input.nodeId },
       })
     }),
-  update: protectedProcedure
+  update: sessionProtectedProcedure
     .input(z.object({ name: z.string(), nodeId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.node.update({
         where: { id: input.nodeId },
         data: {
+          // TODO: Test that the undefineds are actually necessary
           name: input.name,
           worldId: undefined,
           id: undefined,

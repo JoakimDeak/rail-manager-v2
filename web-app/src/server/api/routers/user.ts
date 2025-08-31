@@ -1,7 +1,7 @@
-import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
+import { createTRPCRouter, sessionProtectedProcedure } from '~/server/api/trpc'
 
 export const userRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: sessionProtectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: { id: ctx.session.user.id },
     })

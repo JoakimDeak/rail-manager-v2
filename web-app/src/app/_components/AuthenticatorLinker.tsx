@@ -7,6 +7,7 @@ import QRCode from 'react-qr-code'
 import CheckIcon from '~/icons/check.svg'
 import ErrorIcon from '~/icons/error.svg'
 import Spinner from '~/icons/loading.svg'
+import { AUTHENTICATOR_CODE_DIGITS } from '~/server/api/auth'
 import { api } from '~/trpc/react'
 import cn from '~/utils/cn'
 
@@ -50,8 +51,8 @@ export const AuthenticatorLinker = () => {
             })}
             className="w-full flex flex-row group gap-2 max-w-[272px]"
           >
-            <div className="grid grid-cols-6 gap-2 w-full">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div className="grid gap-2 w-full grid-flow-col auto-cols-fr">
+              {Array.from({ length: AUTHENTICATOR_CODE_DIGITS }).map((_, i) => (
                 <span
                   onClick={() => setFocus('code')}
                   key={i}
@@ -70,7 +71,7 @@ export const AuthenticatorLinker = () => {
             </div>
             <input
               {...register('code')}
-              maxLength={6}
+              maxLength={AUTHENTICATOR_CODE_DIGITS}
               autoFocus
               className="sr-only"
             />

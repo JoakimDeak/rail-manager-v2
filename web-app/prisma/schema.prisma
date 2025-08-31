@@ -96,16 +96,19 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
 
+  token_version Int     @default(0)
   totp_secret   String?
   totp_verified Boolean @default(false)
 
   accounts Account[]
   sessions Session[]
   worlds   World[]
+
+  @@index(fields: [id, email])
 }
 
 model VerificationToken {

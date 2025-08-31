@@ -1,9 +1,13 @@
 import { z } from 'zod'
 
-import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  sessionProtectedProcedure,
+} from '~/server/api/trpc'
 
 export const worldRouter = createTRPCRouter({
-  create: protectedProcedure
+  create: sessionProtectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.world.create({
@@ -13,7 +17,7 @@ export const worldRouter = createTRPCRouter({
         },
       })
     }),
-  delete: protectedProcedure
+  delete: sessionProtectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.world.delete({
@@ -22,13 +26,13 @@ export const worldRouter = createTRPCRouter({
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const worlds = await ctx.db.world.findMany({
-      where: { createdBy: { id: ctx.session.user.id } },
+      where: { createdBy: { id: ctx.userId } },
       orderBy: { createdAt: 'asc' },
     })
 
     return worlds ?? null
   }),
-  get: protectedProcedure
+  get: sessionProtectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const world = await ctx.db.world.findUnique({
@@ -37,7 +41,7 @@ export const worldRouter = createTRPCRouter({
 
       return world ?? null
     }),
-  update: protectedProcedure
+  update: sessionProtectedProcedure
     .input(z.object({ id: z.number(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.world.update({

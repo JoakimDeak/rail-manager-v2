@@ -4,6 +4,8 @@ import toast from 'react-hot-toast'
 
 import CloseIcon from '~/icons/close.svg'
 import Spinner from '~/icons/loading.svg'
+import UnlinkIcon from '~/icons/unlink.svg'
+import { AUTHENTICATOR_CODE_DIGITS } from '~/server/api/auth'
 import { api } from '~/trpc/react'
 import cn from '~/utils/cn'
 
@@ -43,18 +45,21 @@ export const AuthenticatorUnlinker = () => {
   })
 
   return (
-    <div
-      className="flex flex-row gap-2 items-center bg-white w-fit py-2 px-2
-        justify-start"
-    >
+    <div className="flex flex-row gap-2 items-center bg-white w-full
+      justify-start">
+      <span
+        className="outline outline-black py-1 px-2 grid place-items-center grow"
+      >
+        Unlink authenticator
+      </span>
       <button
         onClick={() => {
           dialogRef.current?.showModal()
           setFocus('code')
         }}
-        className="button-sm"
+        className="button-sm p-1"
       >
-        Unlink authenticator
+        <UnlinkIcon />
       </button>
       <dialog
         className="size-full bg-transparent open:grid place-items-center
@@ -89,8 +94,8 @@ export const AuthenticatorUnlinker = () => {
             onSubmit={handleSubmit(({ code }) => unlink.mutate({ code }))}
             className="px-4 pb-4 w-full flex flex-col gap-2"
           >
-            <div className="group grid grid-cols-6 gap-2 w-full">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div className="group grid grid-flow-col auto-cols-fr gap-2 w-full">
+              {Array.from({ length: AUTHENTICATOR_CODE_DIGITS }).map((_, i) => (
                 <span
                   onClick={() => setFocus('code')}
                   key={i}
@@ -108,7 +113,7 @@ export const AuthenticatorUnlinker = () => {
               ))}
               <input
                 {...register('code')}
-                maxLength={6}
+                maxLength={AUTHENTICATOR_CODE_DIGITS}
                 autoFocus
                 className="sr-only"
               />

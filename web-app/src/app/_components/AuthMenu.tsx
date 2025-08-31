@@ -4,6 +4,7 @@ import { api } from '~/trpc/react'
 
 import { AuthenticatorLinker } from './AuthenticatorLinker'
 import { AuthenticatorUnlinker } from './AuthenticatorUnlinker'
+import { RefreshTokenRevoker } from './RefreshTokenRevoker'
 
 export const AuthMenu = () => {
   const [user] = api.user.get.useSuspenseQuery()
@@ -21,9 +22,10 @@ export const AuthMenu = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="flex flex-col gap-2 w-fit self-center">
+      <span className="outline outline-black py-1 px-2 bg-white w-fit">{`Email: ${user.email}`}</span>
+      <RefreshTokenRevoker />
       <AuthenticatorUnlinker />
-      {/* TODO: Add button for revoking refresh tokens */}
     </div>
   )
 }

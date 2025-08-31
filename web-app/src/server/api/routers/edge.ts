@@ -2,10 +2,10 @@ import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
+import { createTRPCRouter, sessionProtectedProcedure } from '~/server/api/trpc'
 
 export const edgeRouter = createTRPCRouter({
-  getAll: protectedProcedure
+  getAll: sessionProtectedProcedure
     .input(z.object({ worldId: z.number() }))
     .query(async ({ ctx, input }) => {
       const edges = await ctx.db.edge.findMany({
@@ -19,7 +19,7 @@ export const edgeRouter = createTRPCRouter({
 
       return edges ?? null
     }),
-  create: protectedProcedure
+  create: sessionProtectedProcedure
     .input(
       z
         .object({
@@ -54,19 +54,20 @@ export const edgeRouter = createTRPCRouter({
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
       }
     }),
-  delete: protectedProcedure
+  delete: sessionProtectedProcedure
     .input(z.object({ edgeId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.edge.delete({
         where: { id: input.edgeId },
       })
     }),
-  update: protectedProcedure
+  update: sessionProtectedProcedure
     .input(z.object({ edgeId: z.number(), weight: z.number().min(1) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.edge.update({
         where: { id: input.edgeId },
         data: {
+          // TODO: Test that the undefineds are actually necessary
           weight: input.weight,
           id: undefined,
           worldId: undefined,
