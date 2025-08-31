@@ -43,10 +43,7 @@ export const nodeRouter = createTRPCRouter({
       return ctx.db.node.update({
         where: { id: input.nodeId },
         data: {
-          // TODO: Test that the undefineds are actually necessary
           name: input.name,
-          worldId: undefined,
-          id: undefined,
         },
       })
     }),

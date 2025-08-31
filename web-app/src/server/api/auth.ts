@@ -1,7 +1,5 @@
 import z from 'zod'
 
-// TODO: Bad file name?
-
 export const AUTHENTICATOR_CODE_DIGITS = 6
 
 export const refreshTokenPayloadSchema = z.object({

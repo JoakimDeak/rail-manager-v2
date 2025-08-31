@@ -114,7 +114,6 @@ export const authRouter = createTRPCRouter({
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
 
-      // TODO: Increment version here
       const refreshToken = jwt.sign(
         {
           email: user.email,

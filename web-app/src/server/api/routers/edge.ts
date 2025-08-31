@@ -67,12 +67,7 @@ export const edgeRouter = createTRPCRouter({
       return ctx.db.edge.update({
         where: { id: input.edgeId },
         data: {
-          // TODO: Test that the undefineds are actually necessary
           weight: input.weight,
-          id: undefined,
-          worldId: undefined,
-          node1Id: undefined,
-          node2Id: undefined,
         },
       })
     }),
