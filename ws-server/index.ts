@@ -22,9 +22,15 @@ const server = Bun.serve({
 })
 
 setInterval(() => {
-  connections.forEach((connection) =>
-    connection.send(JSON.stringify([1, 2, 3]))
-  )
-}, 20 * 1000)
+  connections.forEach((connection) => {
+    if (Math.random() > 0.5) {
+      console.log('send 1,2,3')
+      connection.send(JSON.stringify([1, 2, 3]))
+    } else {
+      console.log('send 3,2,1')
+      connection.send(JSON.stringify([3, 2, 1]))
+    }
+  })
+}, 10 * 1000)
 
 console.log(`Websocket server running on ${server.url}`)

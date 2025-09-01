@@ -197,11 +197,11 @@ local function connectWebSocket()
             sleep(30)
         else
             print("connected to websocket server")
-            WsConnection.send("ping")
         end
     end
 end
 
+-- TODO: Add print on server disconnect
 local function websocketHandler()
     connectWebSocket()
     while true do
@@ -216,17 +216,14 @@ local function websocketHandler()
 
         for i = 2, #path - 1 do
             local node = path[i]
-            local rednetMessage = textutils.serialiseJSON({
-                [1] = path[i - 1],
-                [2] = path[i + 1]
-            })
+            local routeMessage = path[i - 1] .. "-" .. path[i + 1]
             local receiver = MessageBuffer["n" .. node].computerId
             if not receiver then
-                MessageBuffer["n" .. node].lastMessage = rednetMessage
+                MessageBuffer["n" .. node].lastMessage = routeMessage
             else
-                local received = rednet.send(receiver, rednetMessage)
+                local received = rednet.send(receiver, routeMessage)
                 if not received then
-                    MessageBuffer["n" .. node].lastMessage = rednetMessage
+                    MessageBuffer["n" .. node].lastMessage = routeMessage
                 end
             end
         end
@@ -239,16 +236,36 @@ local function rednetHandler()
     while true do
         local sender, message = rednet.receive()
 
-        local bufferId = "n" .. message
-        MessageBuffer[bufferId].computerId = sender
+        -- TODO: Add action for triggering route
+        if message.action == "connect" then
+            local bufferId = "n" .. message.nodeId
+            MessageBuffer[bufferId].computerId = sender
 
-        local lastMessage = MessageBuffer[bufferId].lastMessage
-        if lastMessage ~= nil then
-            local sent = rednet.send(sender, lastMessage)
-            if sent then
-                MessageBuffer[bufferId].lastMessage = nil
+            local lastMessage = MessageBuffer[bufferId].lastMessage
+            if lastMessage ~= nil then
+                local sent = rednet.send(sender, lastMessage)
+                if sent then
+                    MessageBuffer[bufferId].lastMessage = nil
+                end
             end
+        elseif message.action == "request:worldId" then
+            rednet.send(sender, {
+                ["worldId"] = WorldId
+            })
+        elseif message.action == "request:internalNodes" then
+            local nodes = fetch("get", "node.getAllInternal", {
+                ["worldId"] = WorldId
+            })
+            rednet.send(sender, nodes)
+        elseif message.action == "request:connectedNodes" then
+            local connectedNodes = fetch("get", "node.getConnectedNodes", {
+                ["nodeId"] = message.nodeId
+            })
+            rednet.send(sender, connectedNodes)
+        else
+            print("Unsupported action " .. message.action)
         end
+
     end
 end
 

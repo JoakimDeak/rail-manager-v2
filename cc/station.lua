@@ -1,0 +1,3 @@
+-- TODO:
+-- config setup with serverId, node, and output side
+-- rednet message to trigger route
