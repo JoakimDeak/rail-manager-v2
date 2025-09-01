@@ -1,4 +1,4 @@
-# websocket-server
+# ws-server
 
 To install dependencies:
 
