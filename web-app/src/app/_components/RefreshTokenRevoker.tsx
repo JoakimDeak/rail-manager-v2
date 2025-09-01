@@ -4,9 +4,9 @@ import RevokeIcon from '~/icons/revoke.svg'
 import { api } from '~/trpc/react'
 
 export const RefreshTokenRevoker = () => {
-  const rotate = api.auth.rotateRefreshToken.useMutation({
+  const rotate = api.auth.rotateRefreshTokens.useMutation({
     onSuccess: () => {
-      toast.success('Your refresh token has been revoked')
+      toast.success('Your refresh tokens has been revoked')
     },
   })
 

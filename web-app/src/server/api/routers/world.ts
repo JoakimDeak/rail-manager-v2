@@ -6,6 +6,8 @@ import {
   sessionProtectedProcedure,
 } from '~/server/api/trpc'
 
+// TODO: Rename world to network
+
 export const worldRouter = createTRPCRouter({
   create: sessionProtectedProcedure
     .input(z.object({ name: z.string().min(1) }))

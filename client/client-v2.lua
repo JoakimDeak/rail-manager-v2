@@ -1,0 +1,4 @@
+-- TODO: 
+-- Add config with worldId (or should we get that from the server to not duplicate fetch logic?), nodeId, server computer id, route states, and preferred output side
+-- On rednet connect send node id to server computer
+-- On rednet message set correct redstone output

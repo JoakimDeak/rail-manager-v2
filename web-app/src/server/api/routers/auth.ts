@@ -117,7 +117,7 @@ export const authRouter = createTRPCRouter({
       const refreshToken = jwt.sign(
         {
           email: user.email,
-          version: user.token_version + 1,
+          version: user.token_version,
         } satisfies RefreshTokenPayload,
         env.REFRESH_TOKEN_SECRET,
       )
@@ -126,24 +126,19 @@ export const authRouter = createTRPCRouter({
         env.ACCESS_TOKEN_SECRET,
       )
 
-      await ctx.db.user.update({
-        where: { id: user.id },
-        data: {
-          token_version: { increment: 1 },
-        },
-      })
-
       return { refreshToken, accessToken }
     }),
   generateAccessToken: publicProcedure.mutation(async ({ ctx }) => {
     const refreshToken = ctx.headers.get('Authorization')?.split(' ')?.[1]
     if (!refreshToken) {
+      console.log('no token')
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
     const { data: payload, error } = refreshTokenPayloadSchema.safeParse(
       jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET),
     )
     if (error) {
+      console.log('couldnt verify')
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
@@ -152,7 +147,11 @@ export const authRouter = createTRPCRouter({
       select: { token_version: true },
     })
     if (user?.token_version !== payload.version) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' })
+      console.log('bad version')
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Refresh token has been revoked',
+      })
     }
 
     const accessToken = jwt.sign(
@@ -162,7 +161,7 @@ export const authRouter = createTRPCRouter({
 
     return { accessToken }
   }),
-  rotateRefreshToken: sessionProtectedProcedure.mutation(async ({ ctx }) => {
+  rotateRefreshTokens: sessionProtectedProcedure.mutation(async ({ ctx }) => {
     return ctx.db.user.update({
       where: { id: ctx.session.user.id },
       data: {
