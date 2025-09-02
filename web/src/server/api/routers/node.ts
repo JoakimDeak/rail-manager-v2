@@ -1,4 +1,4 @@
-import { getInternalNodes } from '@prisma/client/sql'
+import { getExternalNodes, getInternalNodes } from '@prisma/client/sql'
 import { z } from 'zod'
 
 import {
@@ -39,6 +39,15 @@ export const nodeRouter = createTRPCRouter({
       )
 
       return internalNodes ?? null
+    }),
+  getAllExternal: tokenProtectedProcedure
+    .input(z.object({ worldId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const externalNodes = await ctx.db.$queryRawTyped(
+        getExternalNodes(input.worldId),
+      )
+
+      return externalNodes ?? null
     }),
   getConnectedNodes: tokenProtectedProcedure
     .input(z.object({ nodeId: z.number() }))

@@ -66,7 +66,6 @@ export const Node = ({ node }: { node: NodeType }) => {
             className="hidden"
             type="checkbox"
             onChange={(e) => {
-              console.log('toggle')
               if (e.target.checked) {
                 nameEditRef.current?.focus()
               }

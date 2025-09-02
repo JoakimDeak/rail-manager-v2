@@ -47,9 +47,9 @@ const getParentGraph = (start: number, nodes: Node[], edges: Edge[]) => {
     visited.add(curr)
 
     const neighbours = edges
-      .filter(({ node1, node2 }) => curr === node1 || curr == node2)
-      .map(({ node1, node2, weight }) => ({
-        node: curr === node1 ? node2 : node1,
+      .filter(({ node1Id, node2Id }) => curr === node1Id || curr == node2Id)
+      .map(({ node1Id, node2Id, weight }) => ({
+        node: curr === node1Id ? node2Id : node1Id,
         weight,
       }))
 
@@ -85,38 +85,14 @@ const pathfind = (parentGraph: Record<number, number>, end: number) => {
   return path.toReversed()
 }
 
-export const getPath = (from: number, to: number) => {
-  const pathKey = getPathKey(from, to)
-  const reversedKey = getPathKey(to, from)
-
-  if (pathCache.has(pathKey)) {
-    return pathCache.get(pathKey)
-  } else if (pathCache.has(reversedKey)) {
-    pathCache.set(pathKey, pathCache.get(reversedKey)?.toReversed())
-    return pathCache.get(pathKey)
-  }
-
-  const cachedParentGraph = parentGraphCache.get(from)
-  if (cachedParentGraph) {
-    const res = pathfind(cachedParentGraph, to)
-    pathCache.set(pathKey, res)
-    return res
-  }
-  const cachedReversedParentGraph = parentGraphCache.get(to)
-  if (cachedReversedParentGraph) {
-    const res = pathfind(cachedReversedParentGraph, from)?.toReversed()
-    pathCache.set(pathKey, res)
-    return res
-  }
-
-  const nodes = getNodes()
-  const edges = getEdges()
+// Add cache that web can invalidate
+export const getPath = (worldId: number, from: number, to: number) => {
+  const nodes = getNodes(worldId)
+  const edges = getEdges(worldId)
 
   const parentGraph = getParentGraph(from, nodes, edges)
-  parentGraphCache.set(from, parentGraph)
 
   const path = pathfind(parentGraph, to)
-  pathCache.set(pathKey, path)
 
   return path
 }

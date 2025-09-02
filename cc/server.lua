@@ -171,7 +171,7 @@ local function loadConfig()
 end
 
 local function configureRednet()
-    local nodes = fetch("get", "node.getAllInternal", {
+    local nodes = fetch("get", "node.getAll", {
         ["worldId"] = WorldId
     })
     if not nodes then
@@ -191,7 +191,7 @@ end
 
 local function connectWebSocket()
     while not WsConnection do
-        WsConnection = http.websocket(websocketUrl)
+        WsConnection = http.websocket(websocketUrl .. "?worldId=" .. WorldId)
         if not WsConnection then
             print("couldnt connect, sleeping")
             sleep(30)
@@ -212,18 +212,28 @@ local function websocketHandler()
             connectWebSocket()
             break
         end
-        local path = textutils.unserialiseJSON(message)
+        local messageJson = textutils.unserialiseJSON(message)
+        if messageJson and messageJson.success then
+            local path = messageJson.path
+            print("got path " .. textutils.serialiseJSON(path))
 
-        for i = 2, #path - 1 do
-            local node = path[i]
-            local routeMessage = path[i - 1] .. "-" .. path[i + 1]
-            local receiver = MessageBuffer["n" .. node].computerId
-            if not receiver then
-                MessageBuffer["n" .. node].lastMessage = routeMessage
-            else
-                local received = rednet.send(receiver, routeMessage)
-                if not received then
+            local origin = MessageBuffer["n" .. path[1]].computerId
+            rednet.send(origin, {
+                ["success"] = true
+            })
+
+            for i = 2, #path - 1 do
+                local node = path[i]
+                local routeMessage = path[i - 1] .. "-" .. path[i + 1]
+                local receiver = MessageBuffer["n" .. node].computerId
+                if not receiver then
                     MessageBuffer["n" .. node].lastMessage = routeMessage
+                else
+                    -- TODO: Add acking for all messages from server to client
+                    rednet.send(receiver, routeMessage)
+                    -- if not received then
+                    --     MessageBuffer["n" .. node].lastMessage = routeMessage
+                    -- end
                 end
             end
         end
@@ -236,17 +246,14 @@ local function rednetHandler()
     while true do
         local sender, message = rednet.receive()
 
-        -- TODO: Add action for triggering route
         if message.action == "connect" then
             local bufferId = "n" .. message.nodeId
             MessageBuffer[bufferId].computerId = sender
 
             local lastMessage = MessageBuffer[bufferId].lastMessage
             if lastMessage ~= nil then
-                local sent = rednet.send(sender, lastMessage)
-                if sent then
-                    MessageBuffer[bufferId].lastMessage = nil
-                end
+                rednet.send(sender, lastMessage)
+                MessageBuffer[bufferId].lastMessage = nil
             end
         elseif message.action == "request:worldId" then
             rednet.send(sender, {
@@ -257,11 +264,22 @@ local function rednetHandler()
                 ["worldId"] = WorldId
             })
             rednet.send(sender, nodes)
+        elseif message.action == "request:externalNodes" then
+            local nodes = fetch("get", "node.getAllExternal", {
+                ["worldId"] = WorldId
+            })
+            rednet.send(sender, nodes)
         elseif message.action == "request:connectedNodes" then
             local connectedNodes = fetch("get", "node.getConnectedNodes", {
                 ["nodeId"] = message.nodeId
             })
             rednet.send(sender, connectedNodes)
+        elseif message.action == "set:route" then
+            WsConnection.send(textutils.serialiseJSON({
+                ["worldId"] = WorldId,
+                ["from"] = message.from,
+                ["to"] = message.to
+            }))
         else
             print("Unsupported action " .. message.action)
         end

@@ -1,36 +1,46 @@
 import type { ServerWebSocket } from 'bun'
+import z from 'zod'
+import { getPath } from './pathfinding'
 
-const connections = new Set<ServerWebSocket<unknown>>()
+const connections = new Set<ServerWebSocket<{ worldId: number }>>()
+
+const routeBodySchema = z.object({ from: z.number(), to: z.number() })
 
 const server = Bun.serve({
   port: 3100,
-  // TODO: Add trigger endpoint
   fetch(req, server) {
-    const success = server.upgrade(req)
+    const worldId = new URL(req.url).searchParams.get('worldId')
+    if (worldId === null) {
+      return new Response(undefined, { status: 400 })
+    }
+    const success = server.upgrade(req, {
+      data: { worldId },
+    })
+
     if (success) {
       return undefined
     }
   },
-  // TODO: Add world id to ws
   websocket: {
-    async message(ws, message) {},
-    open: (ws) => {
+    async message(ws: ServerWebSocket<{ worldId: number }>, message) {
+      try {
+        if (typeof message !== 'string') {
+          throw new Error()
+        }
+        const { from, to } = routeBodySchema.parse(JSON.parse(message))
+        const path = getPath(ws.data.worldId, from, to)
+        if (!path) {
+          throw new Error()
+        }
+        ws.send(JSON.stringify({ success: true, path }))
+      } catch (e) {
+        ws.send(JSON.stringify({ success: false }))
+      }
+    },
+    open: (ws: ServerWebSocket<{ worldId: number }>) => {
       connections.add(ws)
-      console.log('websocket connection was opened')
     },
   },
 })
-
-setInterval(() => {
-  connections.forEach((connection) => {
-    if (Math.random() > 0.5) {
-      console.log('send 1,2,3')
-      connection.send(JSON.stringify([1, 2, 3]))
-    } else {
-      console.log('send 3,2,1')
-      connection.send(JSON.stringify([3, 2, 1]))
-    }
-  })
-}, 10 * 1000)
 
 console.log(`Websocket server running on ${server.url}`)

@@ -40,71 +40,63 @@ local function createConfig()
 
     local hasNode = false
     while not hasNode do
-        local sent = rednet.send(config.ServerId, {
+        rednet.send(config.ServerId, {
             ["action"] = "request:internalNodes"
         })
-        if sent then
-            local _, nodes = rednet.receive()
-            if not nodes then
-                print("Server error when getting internal nodes")
-                sleep(30)
-            else
-                print("Select node:")
-                for _, node in ipairs(nodes) do
-                    print(node.name)
-                end
-                local nodeName = read()
-                local selectedNode = find(nodes, function(node)
-                    return node.name == nodeName
-                end)
-                if selectedNode then
-                    config.Node = selectedNode
-                    hasNode = true
-                else
-                    print("Invalid node name")
-                end
-            end
-        else
-            print("Could not connect to server")
+
+        local _, nodes = rednet.receive()
+        if not nodes then
+            print("Server error when getting internal nodes")
             sleep(30)
+        else
+            print("Select node:")
+            for _, node in ipairs(nodes) do
+                print(node.name)
+            end
+            local nodeName = read()
+            local selectedNode = find(nodes, function(node)
+                return node.name == nodeName
+            end)
+            if selectedNode then
+                config.Node = selectedNode
+                hasNode = true
+            else
+                print("Invalid node name")
+            end
         end
     end
 
     config.Routes = {}
     local hasRoutes = false
     while not hasRoutes do
-        local sent = rednet.send(config.ServerId, {
+        rednet.send(config.ServerId, {
             ["action"] = "request:connectedNodes",
             ["nodeId"] = config.Node.id
         })
-        if sent then
-            local _, connectedNodes = rednet.receive()
-            if not connectedNodes then
-                print("Server error when getting connected nodes")
-                sleep(30)
-            else
-                for _, nodeA in ipairs(connectedNodes) do
-                    for _, nodeB in ipairs(connectedNodes) do
-                        if nodeA.id ~= nodeB.id then
-                            local inputIsValid = false
-                            while not inputIsValid do
-                                print("State for " .. nodeA.name .. " to " .. nodeB.name .. " (off|on):")
-                                local input = read()
-                                if input == "off" or input == "on" then
-                                    inputIsValid = true
-                                    config.Routes[nodeA.id .. "-" .. nodeB.id] = input
-                                else
-                                    print("Invalid state")
-                                end
+
+        local _, connectedNodes = rednet.receive()
+        if not connectedNodes then
+            print("Server error when getting connected nodes")
+            sleep(30)
+        else
+            for _, nodeA in ipairs(connectedNodes) do
+                for _, nodeB in ipairs(connectedNodes) do
+                    if nodeA.id ~= nodeB.id then
+                        local inputIsValid = false
+                        while not inputIsValid do
+                            print("State for " .. nodeA.name .. " to " .. nodeB.name .. " (off|on):")
+                            local input = read()
+                            if input == "off" or input == "on" then
+                                inputIsValid = true
+                                config.Routes[nodeA.id .. "-" .. nodeB.id] = input
+                            else
+                                print("Invalid state")
                             end
                         end
                     end
                 end
-                hasRoutes = true
             end
-        else
-            print("Could not connect to server")
-            sleep(30)
+            hasRoutes = true
         end
     end
 
@@ -157,11 +149,14 @@ end
 local function rednetListener()
 
     local sender, message = rednet.receive()
+    print("got message " .. message)
+    print("routes: " .. textutils.serialiseJSON(Routes))
     if sender ~= ServerId then
         return
     end
 
     if not type(message) == "string" then
+        print("wrong type")
         -- TODO?: Check with regex
         return
     end
