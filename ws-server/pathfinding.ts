@@ -1,18 +1,5 @@
 import { type Edge, getEdges, getNodes, type Node } from './db'
 
-type PathKey = `${number},${number}`
-const getPathKey = (from: number, to: number) => {
-  return `${from},${to}` as const satisfies PathKey
-}
-
-const pathCache = new Map<PathKey, number[] | undefined>()
-const parentGraphCache = new Map<number, Record<number, number>>()
-
-export const invalidateCache = () => {
-  pathCache.clear()
-  parentGraphCache.clear()
-}
-
 const getParentGraph = (start: number, nodes: Node[], edges: Edge[]) => {
   const dists = nodes.reduce((acc, curr) => {
     if (curr.id === start) {
@@ -85,7 +72,7 @@ const pathfind = (parentGraph: Record<number, number>, end: number) => {
   return path.toReversed()
 }
 
-// Add cache that web can invalidate
+// TODO: Add cache that web can invalidate
 export const getPath = (worldId: number, from: number, to: number) => {
   const nodes = getNodes(worldId)
   const edges = getEdges(worldId)
