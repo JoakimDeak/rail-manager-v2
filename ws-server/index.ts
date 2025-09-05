@@ -39,6 +39,10 @@ const server = Bun.serve({
     },
     open: (ws: ServerWebSocket<{ worldId: number }>) => {
       connections.add(ws)
+      console.log('connections', connections.size)
+    },
+    close: (ws: ServerWebSocket<{ worldId: number }>) => {
+      connections.delete(ws)
     },
   },
 })

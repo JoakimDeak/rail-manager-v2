@@ -215,7 +215,6 @@ local function websocketHandler()
         local messageJson = textutils.unserialiseJSON(message)
         if messageJson and messageJson.success then
             local path = messageJson.path
-            print("got path " .. textutils.serialiseJSON(path))
 
             local origin = MessageBuffer["n" .. path[1]].computerId
             rednet.send(origin, {
@@ -223,17 +222,17 @@ local function websocketHandler()
             })
 
             for i = 2, #path - 1 do
-                local node = path[i]
+                local nodeId = "n" .. path[i]
                 local routeMessage = path[i - 1] .. "-" .. path[i + 1]
-                local receiver = MessageBuffer["n" .. node].computerId
+                local receiver = MessageBuffer[nodeId].computerId
                 if not receiver then
-                    MessageBuffer["n" .. node].lastMessage = routeMessage
+                    MessageBuffer[nodeId].lastMessage = routeMessage
                 else
-                    -- TODO: Add acking for all messages from server to client
                     rednet.send(receiver, routeMessage)
-                    -- if not received then
-                    --     MessageBuffer["n" .. node].lastMessage = routeMessage
-                    -- end
+                    local _, ack = rednet.receive(nil, 5)
+                    if not ack then
+                        MessageBuffer[nodeId].lastMessage = routeMessage
+                    end
                 end
             end
         end
@@ -280,8 +279,9 @@ local function rednetHandler()
                 ["from"] = message.from,
                 ["to"] = message.to
             }))
+        elseif message.action == "ack" then
         else
-            print("Unsupported action " .. message.action)
+            print("Unsupported action in message" .. textutils.serialiseJSON(message))
         end
 
     end

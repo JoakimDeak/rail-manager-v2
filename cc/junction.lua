@@ -149,14 +149,14 @@ end
 local function rednetListener()
 
     local sender, message = rednet.receive()
-    print("got message " .. message)
-    print("routes: " .. textutils.serialiseJSON(Routes))
+    rednet.send(sender, {
+        ["action"] = "ack"
+    })
     if sender ~= ServerId then
         return
     end
 
     if not type(message) == "string" then
-        print("wrong type")
         -- TODO?: Check with regex
         return
     end

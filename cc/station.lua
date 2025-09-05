@@ -119,7 +119,7 @@ local function selectDestination()
         local _, externalNodes = rednet.receive()
         if not externalNodes then
             print("Server error when getting external nodes")
-            sleep()
+            sleep(30)
         else
             print("Select destination:")
             for _, node in ipairs(externalNodes) do
@@ -142,7 +142,7 @@ local function selectDestination()
             local _, res = rednet.receive()
             if res.success then
                 redstone.setOutput(OutputSide, true)
-                sleep(10)
+                sleep(5)
                 redstone.setOutput(OutputSide, false)
             else
                 print("Error setting route")
